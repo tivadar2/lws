@@ -13,14 +13,18 @@ class LwsMain(Ui_MainWindow):
         self.pushButton_addLang.clicked.connect(self.addLanguage)
 
     def printsome(self):
-        db.insert({'van': 1})
         print(self.textEdit.toPlainText())
 
     def addLanguage(self):
-        db.insert({'language': self.textEdit_language.toPlainText()})
-        print('Language has been added.')
+        typedLanguage = self.lineEdit_language.toPlainText()
+        res = languages.search(where('language') == typedLanguage)
+        if not res: # typedLanguage isn't in the database yet
+            languages.insert({'language': typedLanguage})
+            print('Language has been added.')
+        else:
+            print('Language is already in the database.')  
     
-db = TinyDB('data/languages.json')
+languages = TinyDB('data/languages.json')
 
 if __name__ == '__main__':
     app = QtWidgets.QApplication(sys.argv)

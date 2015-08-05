@@ -96,19 +96,6 @@
         <string>Study Languge:</string>
        </property>
       </widget>
-      <widget class="QTextEdit" name="textEdit_language">
-       <property name="geometry">
-        <rect>
-         <x>90</x>
-         <y>30</y>
-         <width>161</width>
-         <height>21</height>
-        </rect>
-       </property>
-       <property name="verticalScrollBarPolicy">
-        <enum>Qt::ScrollBarAlwaysOff</enum>
-       </property>
-      </widget>
       <widget class="QLabel" name="label_2">
        <property name="geometry">
         <rect>
@@ -133,6 +120,16 @@
        </property>
        <property name="text">
         <string>Add language</string>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="lineEdit_language">
+       <property name="geometry">
+        <rect>
+         <x>90</x>
+         <y>30</y>
+         <width>161</width>
+         <height>20</height>
+        </rect>
        </property>
       </widget>
      </widget>
