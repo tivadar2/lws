@@ -10,7 +10,11 @@ class LwsMain(Ui_MainWindow):
         Ui_MainWindow.__init__(self)
         self.setupUi(MainWindow)
 
-        #bindings
+        # load languages to choose from
+        for language in languagesDb.all():
+            self.comboBox_languages.addItem(language.get('language'))
+
+        # bindings
         self.pushButton.clicked.connect(self.printsome)
         self.pushButton_addLang.clicked.connect(self.addLanguage)
         self.textEdit.selectionChanged.connect(self.selChanged)
@@ -47,7 +51,7 @@ class LwsMain(Ui_MainWindow):
             selectedText = wholeText[beginPos:endPos]
             print(selectedText)
     
-languages = TinyDB('data/languages.json')
+languagesDb = TinyDB('data/languages.json')
 
 if __name__ == '__main__':
     app = QtWidgets.QApplication(sys.argv)
