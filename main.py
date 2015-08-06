@@ -1,5 +1,6 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from main_ui import Ui_MainWindow
+from menubar import MenuBar
 from tinydb import TinyDB, where
 import sys
 import urllib.parse, urllib.request
@@ -14,11 +15,35 @@ class LwsMain(Ui_MainWindow):
         for language in languagesDb.all():
             self.comboBox_languages.addItem(language.get('language'))
 
+        # initialize menu bar
+        self.menuBar = MenuBar(self.stackedWidget_main)
+
         # bindings
         self.pushButton.clicked.connect(self.printsome)
         self.pushButton_addLang.clicked.connect(self.addLanguage)
-        self.textEdit.selectionChanged.connect(self.selChanged)
+        self.pushButton_addSentence.clicked.connect(self.addSentence)
+        self.textEdit_sentence.selectionChanged.connect(self.selChanged)
 
+        # menu bar bindings
+        self.action_addSentence.triggered.connect(self.menuBar.changeToAddSentence)
+        self.action_addLanguage.triggered.connect(self.menuBar.changeToAddLanguage)
+        self.action_viewTerms.triggered.connect(self.menuBar.changeToViewTerms)
+        self.action_viewSentences.triggered.connect(self.menuBar.changeToViewSentences)
+
+        # setup tableWidget_terms
+        headers = ['Term', 'Translation', 'Score']
+        self.tableWidget_terms.setColumnCount(3)
+        self.tableWidget_terms.setHorizontalHeaderLabels(headers)
+
+        # setup tableWidget_sentences
+        headers = ['Sentence', 'Translation']
+        self.tableWidget_sentences.setColumnCount(2)
+        self.tableWidget_sentences.setHorizontalHeaderLabels(headers)
+        for sentence in sentencesDb.all():
+            self.tableWidget_sentences.insertRow(self.tableWidget_sentences.rowCount()) # place it at action stackwidget change
+            self.tableWidget_sentences.setItem(self.tableWidget_sentences.rowCount() - 1, 0, QtWidgets.QTableWidgetItem(sentence['sentence']))
+            self.tableWidget_sentences.setItem(self.tableWidget_sentences.rowCount() - 1, 1, QtWidgets.QTableWidgetItem(sentence['translation']))
+        
     def printsome(self):
         parameters = {}
         parameters['from'] = 'rus'
@@ -35,23 +60,35 @@ class LwsMain(Ui_MainWindow):
 
     def addLanguage(self):
         typedLanguage = self.lineEdit_language.toPlainText()
-        res = languages.search(where('language') == typedLanguage)
+        res = languagesDb.search(where('language') == typedLanguage)
         if not res: # typedLanguage isn't in the database yet
-            languages.insert({'language': typedLanguage})
+            languagesDb.insert({'language': typedLanguage})
             print('Language has been added.')
         else:
             print('Language is already in the database.')
 
+    def addSentence(self):
+        sentence = self.textEdit_sentence.toPlainText()
+        translation = self.textEdit_translation.toPlainText()
+        currLang = self.comboBox_languages.currentText()
+        row = {}                                                # TODO: check if not duplicate
+        row['language'] = currLang
+        row['sentence'] = sentence
+        row['translation'] = translation
+        sentencesDb.insert(row)
+
     def selChanged(self):
-        cursor = self.textEdit.textCursor()
+        cursor = self.textEdit_sentence.textCursor()
         beginPos = cursor.selectionStart()
         endPos = cursor.selectionEnd()
         if beginPos != endPos:
-            wholeText = self.textEdit.toPlainText()
+            wholeText = self.textEdit_sentence.toPlainText()
             selectedText = wholeText[beginPos:endPos]
             print(selectedText)
-    
+
+# databases
 languagesDb = TinyDB('data/languages.json')
+sentencesDb = TinyDB('data/sentences.json')
 
 if __name__ == '__main__':
     app = QtWidgets.QApplication(sys.argv)

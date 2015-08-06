@@ -14,22 +14,19 @@
    <string>Learning with Sentences</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QTabWidget" name="tabWidget">
+   <widget class="QStackedWidget" name="stackedWidget_main">
     <property name="geometry">
      <rect>
       <x>10</x>
       <y>40</y>
-      <width>591</width>
-      <height>271</height>
+      <width>781</width>
+      <height>541</height>
      </rect>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>3</number>
     </property>
-    <widget class="QWidget" name="tab">
-     <attribute name="title">
-      <string>Add Sentence</string>
-     </attribute>
+    <widget class="QWidget" name="stackedWidgetPage_addSentence" native="true">
      <widget class="QPushButton" name="pushButton">
       <property name="geometry">
        <rect>
@@ -43,7 +40,7 @@
        <string>get from tatoeba</string>
       </property>
      </widget>
-     <widget class="QTextEdit" name="textEdit">
+     <widget class="QTextEdit" name="textEdit_sentence">
       <property name="geometry">
        <rect>
         <x>10</x>
@@ -53,7 +50,7 @@
        </rect>
       </property>
      </widget>
-     <widget class="QTextEdit" name="textEdit_2">
+     <widget class="QTextEdit" name="textEdit_translation">
       <property name="geometry">
        <rect>
         <x>260</x>
@@ -103,10 +100,7 @@
       </property>
      </widget>
     </widget>
-    <widget class="QWidget" name="tab_2">
-     <attribute name="title">
-      <string>Languages</string>
-     </attribute>
+    <widget class="QWidget" name="stackedWidgetPage_addLanguage" native="true">
      <widget class="QFrame" name="frame">
       <property name="geometry">
        <rect>
@@ -173,6 +167,30 @@
       </widget>
      </widget>
     </widget>
+    <widget class="QWidget" name="stackedWidgetPage_viewTerms" native="true">
+     <widget class="QTableWidget" name="tableWidget_terms">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>10</y>
+        <width>256</width>
+        <height>192</height>
+       </rect>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="stackedWidgetPage_viewSentences">
+     <widget class="QTableWidget" name="tableWidget_sentences">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>10</y>
+        <width>256</width>
+        <height>192</height>
+       </rect>
+      </property>
+     </widget>
+    </widget>
    </widget>
    <widget class="QComboBox" name="comboBox_languages">
     <property name="geometry">
@@ -199,6 +217,64 @@
    </widget>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
+  <widget class="QMenuBar" name="menuBar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>800</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuSentences">
+    <property name="title">
+     <string>Sentences</string>
+    </property>
+    <addaction name="action_addSentence"/>
+    <addaction name="action_viewSentences"/>
+   </widget>
+   <widget class="QMenu" name="menuLanguages">
+    <property name="title">
+     <string>Languages</string>
+    </property>
+    <addaction name="action_addLanguage"/>
+   </widget>
+   <widget class="QMenu" name="menuTerms">
+    <property name="title">
+     <string>Terms</string>
+    </property>
+    <addaction name="actionAdd_Term"/>
+    <addaction name="action_viewTerms"/>
+   </widget>
+   <addaction name="menuSentences"/>
+   <addaction name="menuLanguages"/>
+   <addaction name="menuTerms"/>
+  </widget>
+  <action name="action_addSentence">
+   <property name="text">
+    <string>Add Sentence</string>
+   </property>
+  </action>
+  <action name="action_addLanguage">
+   <property name="text">
+    <string>Add Language</string>
+   </property>
+  </action>
+  <action name="actionAdd_Term">
+   <property name="text">
+    <string>Add Term</string>
+   </property>
+  </action>
+  <action name="action_viewTerms">
+   <property name="text">
+    <string>View Terms</string>
+   </property>
+  </action>
+  <action name="action_viewSentences">
+   <property name="text">
+    <string>View Sentences</string>
+   </property>
+  </action>
  </widget>
  <resources/>
  <connections/>
