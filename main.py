@@ -3,6 +3,7 @@ from main_ui import Ui_MainWindow
 from menubar import MenuBar
 from tinydb import TinyDB, where
 import sys
+import string
 import urllib.parse, urllib.request
 from bs4 import BeautifulSoup
 
@@ -36,13 +37,15 @@ class LwsMain(Ui_MainWindow):
         self.tableWidget_terms.setHorizontalHeaderLabels(headers)
 
         # setup tableWidget_sentences
-        headers = ['Sentence', 'Translation']
-        self.tableWidget_sentences.setColumnCount(2)
+        headers = ['Sentence', 'Translation', 'Total Words', 'Unknown words']
+        self.tableWidget_sentences.setColumnCount(4)
         self.tableWidget_sentences.setHorizontalHeaderLabels(headers)
         for sentence in sentencesDb.all():
             self.tableWidget_sentences.insertRow(self.tableWidget_sentences.rowCount()) # place it at action stackwidget change
             self.tableWidget_sentences.setItem(self.tableWidget_sentences.rowCount() - 1, 0, QtWidgets.QTableWidgetItem(sentence['sentence']))
             self.tableWidget_sentences.setItem(self.tableWidget_sentences.rowCount() - 1, 1, QtWidgets.QTableWidgetItem(sentence['translation']))
+            self.tableWidget_sentences.setItem(self.tableWidget_sentences.rowCount() - 1, 2, QtWidgets.QTableWidgetItem(str(sentence['totalWords'])))
+            self.tableWidget_sentences.setItem(self.tableWidget_sentences.rowCount() - 1, 3, QtWidgets.QTableWidgetItem(str(sentence['TODOs'])))
         
     def printsome(self):
         parameters = {}
@@ -69,12 +72,23 @@ class LwsMain(Ui_MainWindow):
 
     def addSentence(self):
         sentence = self.textEdit_sentence.toPlainText()
+        withoutPunctuation = ''.join(c for c in sentence if c not in string.punctuation)
+        print(withoutPunctuation)
+        knownWords = 0
+        totalWords = len(withoutPunctuation.split())
+        for word in withoutPunctuation.split():
+            if not word.isalpha():
+                break
+            if termsDb.contains(where('term') == word):
+                knownWords += 1
         translation = self.textEdit_translation.toPlainText()
         currLang = self.comboBox_languages.currentText()
         row = {}                                                # TODO: check if not duplicate
         row['language'] = currLang
         row['sentence'] = sentence
         row['translation'] = translation
+        row['totalWords'] = totalWords
+        row['TODOs'] = totalWords - knownWords
         sentencesDb.insert(row)
 
     def selChanged(self):
@@ -89,6 +103,7 @@ class LwsMain(Ui_MainWindow):
 # databases
 languagesDb = TinyDB('data/languages.json')
 sentencesDb = TinyDB('data/sentences.json')
+termsDb = TinyDB('data/terms.json')
 
 if __name__ == '__main__':
     app = QtWidgets.QApplication(sys.argv)
