@@ -23,7 +23,10 @@ class LwsMain(Ui_MainWindow):
         self.pushButton.clicked.connect(self.printsome)
         self.pushButton_addLang.clicked.connect(self.addLanguage)
         self.pushButton_addSentence.clicked.connect(self.addSentence)
+        self.pushButton_addTerm.clicked.connect(self.addTerm)
         self.textEdit_sentence.selectionChanged.connect(self.selChanged)
+        self.tableWidget_sentences.currentCellChanged.connect(self.chooseSentence)
+        self.textEdit_currSentence.selectionChanged.connect(self.chooseTerm)
 
         # menu bar bindings
         self.action_addSentence.triggered.connect(self.menuBar.changeToAddSentence)
@@ -71,7 +74,7 @@ class LwsMain(Ui_MainWindow):
             print('Language is already in the database.')
 
     def addSentence(self):
-        sentence = self.textEdit_sentence.toPlainText()
+        sentence = self.textEdit_sentence.toPlainText().lower()
         withoutPunctuation = ''.join(c for c in sentence if c not in string.punctuation)
         print(withoutPunctuation)
         knownWords = 0
@@ -91,6 +94,18 @@ class LwsMain(Ui_MainWindow):
         row['TODOs'] = totalWords - knownWords
         sentencesDb.insert(row)
 
+    def addTerm(self):
+        term = self.lineEdit_term.text()
+        translation = self.lineEdit_termTranslation.text()
+        if not termsDb.contains(where('term') == term):
+            row = {}
+            row['term'] = term
+            row['translation'] = translation
+            termsDb.insert(row)
+            print('Term succesfully added!')
+        else:
+            print('Term is already in the database!')
+
     def selChanged(self):
         cursor = self.textEdit_sentence.textCursor()
         beginPos = cursor.selectionStart()
@@ -99,6 +114,20 @@ class LwsMain(Ui_MainWindow):
             wholeText = self.textEdit_sentence.toPlainText()
             selectedText = wholeText[beginPos:endPos]
             print(selectedText)
+
+    def chooseSentence(self, row, column):
+        print('gg')
+        sentence = self.tableWidget_sentences.item(row, 0).text()
+        self.textEdit_currSentence.setText(sentence)
+
+    def chooseTerm(self):
+        cursor = self.textEdit_currSentence.textCursor()
+        beginPos = cursor.selectionStart()
+        endPos = cursor.selectionEnd()
+        if beginPos != endPos:
+            wholeText = self.textEdit_currSentence.toPlainText()
+            selectedText = wholeText[beginPos:endPos]
+            self.lineEdit_term.setText(selectedText.lower())
 
 # databases
 languagesDb = TinyDB('data/languages.json')

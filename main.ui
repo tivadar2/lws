@@ -26,7 +26,7 @@
     <property name="currentIndex">
      <number>3</number>
     </property>
-    <widget class="QWidget" name="stackedWidgetPage_addSentence" native="true">
+    <widget class="QWidget" name="stackedWidgetPage_addSentence">
      <widget class="QPushButton" name="pushButton">
       <property name="geometry">
        <rect>
@@ -100,7 +100,7 @@
       </property>
      </widget>
     </widget>
-    <widget class="QWidget" name="stackedWidgetPage_addLanguage" native="true">
+    <widget class="QWidget" name="stackedWidgetPage_addLanguage">
      <widget class="QFrame" name="frame">
       <property name="geometry">
        <rect>
@@ -167,7 +167,7 @@
       </widget>
      </widget>
     </widget>
-    <widget class="QWidget" name="stackedWidgetPage_viewTerms" native="true">
+    <widget class="QWidget" name="stackedWidgetPage_viewTerms">
      <widget class="QTableWidget" name="tableWidget_terms">
       <property name="geometry">
        <rect>
@@ -185,9 +185,97 @@
        <rect>
         <x>10</x>
         <y>10</y>
-        <width>256</width>
+        <width>751</width>
         <height>192</height>
        </rect>
+      </property>
+     </widget>
+     <widget class="QTextEdit" name="textEdit_currSentence">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>240</y>
+        <width>271</width>
+        <height>71</height>
+       </rect>
+      </property>
+      <property name="textInteractionFlags">
+       <set>Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="lineEdit_term">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>340</y>
+        <width>171</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="readOnly">
+       <bool>true</bool>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_term">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>320</y>
+        <width>91</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Term:</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_termTranslation">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>370</y>
+        <width>91</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Translation:</string>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="lineEdit_termTranslation">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>390</y>
+        <width>171</width>
+        <height>20</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pushButton_addTerm">
+      <property name="geometry">
+       <rect>
+        <x>200</x>
+        <y>390</y>
+        <width>81</width>
+        <height>23</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Add Term</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_currSentence">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>220</y>
+        <width>91</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Current Sentence:</string>
       </property>
      </widget>
     </widget>
