@@ -33,6 +33,7 @@ class LwsMain(Ui_MainWindow):
         self.action_addLanguage.triggered.connect(self.menuBar.changeToAddLanguage)
         self.action_viewTerms.triggered.connect(self.menuBar.changeToViewTerms)
         self.action_viewSentences.triggered.connect(self.menuBar.changeToViewSentences)
+        self.action_viewSentences.triggered.connect(self.updateTableSentences)
 
         # setup tableWidget_terms
         headers = ['Term', 'Translation', 'Score']
@@ -43,12 +44,7 @@ class LwsMain(Ui_MainWindow):
         headers = ['Sentence', 'Translation', 'Total Words', 'Unknown words']
         self.tableWidget_sentences.setColumnCount(4)
         self.tableWidget_sentences.setHorizontalHeaderLabels(headers)
-        for sentence in sentencesDb.all():
-            self.tableWidget_sentences.insertRow(self.tableWidget_sentences.rowCount()) # place it at action stackwidget change
-            self.tableWidget_sentences.setItem(self.tableWidget_sentences.rowCount() - 1, 0, QtWidgets.QTableWidgetItem(sentence['sentence']))
-            self.tableWidget_sentences.setItem(self.tableWidget_sentences.rowCount() - 1, 1, QtWidgets.QTableWidgetItem(sentence['translation']))
-            self.tableWidget_sentences.setItem(self.tableWidget_sentences.rowCount() - 1, 2, QtWidgets.QTableWidgetItem(str(sentence['totalWords'])))
-            self.tableWidget_sentences.setItem(self.tableWidget_sentences.rowCount() - 1, 3, QtWidgets.QTableWidgetItem(str(sentence['TODOs'])))
+        self.updateTableSentences()
         
     def printsome(self):
         parameters = {}
@@ -74,7 +70,7 @@ class LwsMain(Ui_MainWindow):
             print('Language is already in the database.')
 
     def addSentence(self):
-        sentence = self.textEdit_sentence.toPlainText().lower()
+        sentence = self.textEdit_sentence.toPlainText()
         withoutPunctuation = ''.join(c for c in sentence if c not in string.punctuation)
         print(withoutPunctuation)
         knownWords = 0
@@ -103,6 +99,11 @@ class LwsMain(Ui_MainWindow):
             row['translation'] = translation
             termsDb.insert(row)
             print('Term succesfully added!')
+            for row in sentencesDb.all():
+                withoutPunctuation = ''.join(c for c in row['sentence'].lower() if c not in string.punctuation)
+                if term in withoutPunctuation.split():
+                    TODOs = sentencesDb.get(eid=row.eid)['TODOs']
+                    sentencesDb.update({'TODOs': TODOs-1}, where('sentence') == row['sentence'])
         else:
             print('Term is already in the database!')
 
@@ -116,7 +117,6 @@ class LwsMain(Ui_MainWindow):
             print(selectedText)
 
     def chooseSentence(self, row, column):
-        print('gg')
         sentence = self.tableWidget_sentences.item(row, 0).text()
         self.textEdit_currSentence.setText(sentence)
 
@@ -128,6 +128,18 @@ class LwsMain(Ui_MainWindow):
             wholeText = self.textEdit_currSentence.toPlainText()
             selectedText = wholeText[beginPos:endPos]
             self.lineEdit_term.setText(selectedText.lower())
+
+    def updateTableSentences(self):
+        allSentences = sentencesDb.all()
+        self.tableWidget_sentences.setRowCount(len(allSentences))
+        row = 0
+        for sentence in allSentences:
+            self.tableWidget_sentences.setItem(row, 0, QtWidgets.QTableWidgetItem(sentence['sentence']))
+            self.tableWidget_sentences.setItem(row, 1, QtWidgets.QTableWidgetItem(sentence['translation']))
+            self.tableWidget_sentences.setItem(row, 2, QtWidgets.QTableWidgetItem(str(sentence['totalWords'])))
+            self.tableWidget_sentences.setItem(row, 3, QtWidgets.QTableWidgetItem(str(sentence['TODOs'])))
+            row += 1
+        
 
 # databases
 languagesDb = TinyDB('data/languages.json')
