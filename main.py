@@ -19,21 +19,8 @@ class LwsMain(Ui_MainWindow):
         # initialize menu bar
         self.menuBar = MenuBar(self.stackedWidget_main)
 
-        # bindings
-        self.pushButton.clicked.connect(self.printsome)
-        self.pushButton_addLang.clicked.connect(self.addLanguage)
-        self.pushButton_addSentence.clicked.connect(self.addSentence)
-        self.pushButton_addTerm.clicked.connect(self.addTerm)
-        self.textEdit_sentence.selectionChanged.connect(self.selChanged)
-        self.tableWidget_sentences.currentCellChanged.connect(self.chooseSentence)
-        self.textEdit_currSentence.selectionChanged.connect(self.chooseTerm)
-
-        # menu bar bindings
-        self.action_addSentence.triggered.connect(self.menuBar.changeToAddSentence)
-        self.action_addLanguage.triggered.connect(self.menuBar.changeToAddLanguage)
-        self.action_viewTerms.triggered.connect(self.menuBar.changeToViewTerms)
-        self.action_viewSentences.triggered.connect(self.menuBar.changeToViewSentences)
-        self.action_viewSentences.triggered.connect(self.updateTableSentences)
+        # set bindings/events
+        self.setBindings()
 
         # setup tableWidget_terms
         headers = ['Term', 'Translation', 'Score']
@@ -139,6 +126,23 @@ class LwsMain(Ui_MainWindow):
             self.tableWidget_sentences.setItem(row, 2, QtWidgets.QTableWidgetItem(str(sentence['totalWords'])))
             self.tableWidget_sentences.setItem(row, 3, QtWidgets.QTableWidgetItem(str(sentence['TODOs'])))
             row += 1
+
+    def setBindings(self):
+        # bindings
+        self.pushButton.clicked.connect(self.printsome)
+        self.pushButton_addLang.clicked.connect(self.addLanguage)
+        self.pushButton_addSentence.clicked.connect(self.addSentence)
+        self.pushButton_addTerm.clicked.connect(self.addTerm)
+        self.textEdit_sentence.selectionChanged.connect(self.selChanged)
+        self.tableWidget_sentences.currentCellChanged.connect(self.chooseSentence)
+        self.textEdit_currSentence.selectionChanged.connect(self.chooseTerm)
+
+        # menu bar bindings
+        self.action_addSentence.triggered.connect(self.menuBar.changeToAddSentence)
+        self.action_addLanguage.triggered.connect(self.menuBar.changeToAddLanguage)
+        self.action_viewTerms.triggered.connect(self.menuBar.changeToViewTerms)
+        self.action_viewSentences.triggered.connect(self.menuBar.changeToViewSentences)
+        self.action_viewSentences.triggered.connect(self.updateTableSentences)
         
 
 # databases
